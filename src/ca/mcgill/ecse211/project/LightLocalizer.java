@@ -4,7 +4,7 @@ import static ca.mcgill.ecse211.project.Resources.BASE_WIDTH;
 import static ca.mcgill.ecse211.project.Resources.TILE_SIZE;
 import static ca.mcgill.ecse211.project.Resources.WHEEL_RAD;
 import static ca.mcgill.ecse211.project.Resources.leftMotor;
-import static ca.mcgill.ecse211.project.Resources.lightSensor;
+//import static ca.mcgill.ecse211.project.Resources.lightSensor;
 import static ca.mcgill.ecse211.project.Resources.odometer;
 import static ca.mcgill.ecse211.project.Resources.rightMotor;
 
@@ -39,7 +39,7 @@ public class LightLocalizer {
    * @return rgbArr[0] * 100
    */
   private static float getRed() {
-    lightSensor.getRedMode().fetchSample(rgbArr, 0);
+//    lightsSensor.getRedMode().fetchSample(rgbArr, 0);
     return rgbArr[0] * 100;
 
 
@@ -280,6 +280,7 @@ public class LightLocalizer {
   
   /**
    *Turns right by a specified angle.
+   *@param angle    the angle to turn right by
    */
   public static void turnrightBy(double angle) {
     leftMotor.rotate(convertAngle(angle), true);
@@ -288,6 +289,7 @@ public class LightLocalizer {
   
   /**
    *Turn left by a specified angle.
+   *@param angle    the angle to turn left by
    */
   public static void turnleftBy(double angle) {
     leftMotor.rotate(-convertAngle(angle), true);

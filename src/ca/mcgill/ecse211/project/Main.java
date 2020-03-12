@@ -10,11 +10,6 @@ import lejos.hardware.Button;
  */
 public class Main {
 
-  /**
-   * The main entry point.
-   * 
-   * @param args not used
-   */
   public static int buttonChoice;
   
   public static int map;
