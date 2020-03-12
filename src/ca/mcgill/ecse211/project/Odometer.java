@@ -61,8 +61,15 @@ public class Odometer implements Runnable {
   // Motor-related variables
   private static int leftMotorTachoCount = 0;
   private static int rightMotorTachoCount = 0;
-  private static int old_leftMotorTachoCount = 0;
-  private static int old_rightMotorTachoCount = 0;
+  private static int leftMotorTachoCount_old = leftMotorTachoCount;
+  private static int rightMotorTachoCount_old = rightMotorTachoCount;
+  private static double left_displace;
+  private static double right_displace;
+  private static double delta_displace;
+  private static double delta_theta;
+  private static double delta_x;
+  private static double delta_y;
+  
 
   /**
    * The odometer update period in ms.
@@ -74,7 +81,7 @@ public class Odometer implements Runnable {
    * This is the default constructor of this class. It initiates all motors and variables once. It
    * cannot be accessed externally.
    */
-  private Odometer() {
+  public Odometer() {
     setXyt(0, 0, 0);
   }
 
@@ -97,54 +104,30 @@ public class Odometer implements Runnable {
   public void run() {
     long updateStart;
     long updateDuration;
-    double leftMotorDistance, rightMotorDistance, delta_D, delta_T, delta_X, delta_Y, theta_buff;
-    
-    //initialize theta_buff
-    theta_buff = odo.getXyt()[2] * Math.PI / 180;
-    
-    // Initialize tacho counts to zero
-    leftMotor.resetTachoCount();                                    
-    rightMotor.resetTachoCount();
-    
-    //initialize old tacho count
-    old_leftMotorTachoCount = leftMotor.getTachoCount();
-    old_rightMotorTachoCount = rightMotor.getTachoCount();
 
     while (true) {
       updateStart = System.currentTimeMillis();
 
       leftMotorTachoCount = leftMotor.getTachoCount();
       rightMotorTachoCount = rightMotor.getTachoCount();
+      
+      // Compute left and right displacement   
+      left_displace = Math.PI * WHEEL_RAD * (leftMotorTachoCount - leftMotorTachoCount_old) / 180;
+      right_displace = Math.PI * WHEEL_RAD 
+          * (rightMotorTachoCount - rightMotorTachoCount_old) / 180;
+      
+      // update old tachocounts
+      leftMotorTachoCount_old = leftMotorTachoCount;
+      rightMotorTachoCount_old = rightMotorTachoCount;
 
-      /* TODO */
       // Calculate new robot position based on tachometer counts
-      
-      //Computer the wheel displacement
-      leftMotorDistance = Math.PI * WHEEL_RAD * (leftMotorTachoCount - old_leftMotorTachoCount) / 180;
-      rightMotorDistance = Math.PI * WHEEL_RAD * (rightMotorTachoCount - old_rightMotorTachoCount) / 180;
-      
-      //update the old counts 
-      old_leftMotorTachoCount = leftMotorTachoCount;
-      old_rightMotorTachoCount = rightMotorTachoCount;
-      
-      //computer vehicle displacement
-      delta_D = 0.5*(leftMotorDistance + rightMotorDistance);
-      
-      //compute change in heading
-      delta_T = (leftMotorDistance - rightMotorDistance) / BASE_WIDTH;
-      
-      //update the heading
-      theta_buff += delta_T;
-      
-      //compute X component displacement
-      delta_X = delta_D * Math.sin(theta_buff);
-      
-      //computer Y component displacement;
-      delta_Y = delta_D * Math.cos(theta_buff);
-     
+      delta_displace = 0.5 * (left_displace + right_displace);
+      delta_theta = (left_displace - right_displace) / BASE_WIDTH * 180 / Math.PI;
+      delta_x = delta_displace * Math.sin((theta + delta_theta) / 180 * Math.PI);
+      delta_y = delta_displace * Math.cos((theta + delta_theta) / 180 * Math.PI);
+ 
       // Update odometer values with new calculated values using update()
-      odo.update(delta_X, delta_Y, delta_T * 180 / Math.PI);
-      
+      update(delta_x, delta_y, delta_theta);
       // this ensures that the odometer only runs once every period
       updateDuration = System.currentTimeMillis() - updateStart;
       if (updateDuration < ODOMETER_PERIOD) {
@@ -197,7 +180,7 @@ public class Odometer implements Runnable {
     try {
       x += dx;
       y += dy;
-      theta = (theta + (DEGREE_360 + dtheta) % DEGREE_360) % DEGREE_360; // keeps the updates within 360 degrees
+      theta = (theta + (360 + dtheta) % 360) % 360; // keeps the updates within 360 degrees
       isResetting = false;
       doneResetting.signalAll(); // Let the other threads know we are done resetting
     } finally {

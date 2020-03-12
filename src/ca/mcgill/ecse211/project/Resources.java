@@ -5,8 +5,8 @@ import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
-import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
+import lejos.hardware.sensor.EV3ColorSensor;
 
 /**
  * This class is used to define static resources in one place for easy access and to avoid
@@ -17,62 +17,53 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 public class Resources {
   
   /**
-   * 45 Degrees
+   *  LCD Screen used for displaying information to the user.
    */
-  public static final double DEGREE_45 = 45.0;
+  public static final TextLCD lcd = LocalEV3.get().getTextLCD();
   
   /**
-   * 0 Degrees
+   * Ultrasonic Sensor.
    */
-  public static final double DEGREE_0 = 0.0;
+  public static final EV3UltrasonicSensor usSensor = new EV3UltrasonicSensor(SensorPort.S1);
   
   /**
-   * 180 Degrees
+   * Color Sensor for color detection.
    */
-  public static final double DEGREE_180 = 180.0;
+  public static final EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S2);
   
   /**
-   * 225 Degrees
+   * Color Sensor for localization.
    */
-  public static final double DEGREE_225 = 225.0;
+  public static final EV3ColorSensor lightSensor = new EV3ColorSensor(SensorPort.S4);
+  /**
+   * Left Motor.
+   */
+  public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.D);
   
   /**
-   * 360 Degrees
+   * Right motor.
    */
-  public static final double DEGREE_360 = 360.0;
+  public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.A);
   
   /**
-   * Offset from the wall (cm).
+   * The odometer.
    */
-  public static final int BAND_CENTER = 35;
-
-  /**
-   * Width of dead band (cm).
-   */
-  public static final int BAND_WIDTH = 3;
+  public static Odometer odometer = new Odometer();
   
-  /**
-   * The offset for the light sensor
-   */
-  /* TODO */
-  public static final double LIGHTSENSOR_OFFSET = 10.4;
-  
-  /**
-   * 
-   */
-  public static final int FILTER_OUT = 25;
-  
-  /* TODO TWEAK */
   /**
    * The wheel radius in centimeters.
    */
-  public static final double WHEEL_RAD = 2.130;
+  public static final double WHEEL_RAD = 2.134;
   
-  /* TODO TWEAK*/
   /**
    * The robot width in centimeters.
    */
-  public static final double BASE_WIDTH = 10.15;
+  public static final double BASE_WIDTH = 15.10;
+  
+  /**
+   * Distance between the center of rotation and the Ultrasonic sensor.
+   */
+  public static final double SENSOR_DISPLACEMENT = 6.0;
   
   /**
    * The speed at which the robot moves forward in degrees per second.
@@ -82,56 +73,18 @@ public class Resources {
   /**
    * The speed at which the robot rotates in degrees per second.
    */
-  public static final int ROTATE_SPEED = 100;
+  public static final int ROTATE_SPEED = 50;
   
   /**
    * The motor acceleration in degrees per second squared.
    */
-  public static final int ACCELERATION = 2500;
-  
-  /**
-   * Timeout period in milliseconds.
-   */
-  public static final int TIMEOUT_PERIOD = 3000;
+  public static final int ACCELERATION = 200;
   
   /**
    * The tile size in centimeters. Note that 30.48 cm = 1 ft.
    */
   public static final double TILE_SIZE = 30.48;
   
-  /**
-   * The left motor.
-   */
-  public static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.A);
-
-  /**
-   * The right motor.
-   */
-  public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.D);
   
-  /**
-   * The ultrasonic sensor.
-   */
-  public static final EV3UltrasonicSensor ultraSonicSensor =
-      new EV3UltrasonicSensor(LocalEV3.get().getPort("S1"));
   
-  /**
-   * The color sensor.
-   */
-  public static final EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S2);
-
-  /**
-   * The limit of invalid samples that we read from the US sensor before assuming no obstacle.
-   */
-  public static final int INVALID_SAMPLE_LIMIT = 20;
-  
-  /**
-   * The LCD.
-   */
-  public static final TextLCD lcd = LocalEV3.get().getTextLCD();
-  
-  /**
-   * The odometer.
-   */
-  public static Odometer odometer = Odometer.getOdometer();
 }

@@ -10,15 +10,19 @@ import lejos.hardware.Button;
  */
 public class Main {
 
-
+  /**
+   * The main entry point.
+   * 
+   * @param args not used
+   */
   public static int buttonChoice;
   
   public static int map;
 
   /**
-   * The main entry point.
+   * Main method of our Lab Code, runs the solution.
    * 
-   * @param args 
+   * @param args Default input argument for main method.
    */
   public static void main(String[] args) {
     new Thread(odometer).start();
@@ -31,7 +35,13 @@ public class Main {
 
     new Thread(new Display()).start();
     
-    //TODO: Implement Rescue
+    // TODO: Navigate past the bridge
+    
+    // TODO: Navigation and obstacle detection and avoidance
+    
+    // TODO: Rescue Initiatiated
+    
+    // TODO: Navigate and avoid obstancles back to base
     
     System.exit(0);
   }
@@ -48,7 +58,7 @@ public class Main {
       buttonChoice = Button.waitForAnyPress(); // left or right press
     } while (buttonChoice != Button.ID_ENTER);
     
-    //TODO: Start localization
+    new LightLocalizer().localize();  
   }
   
   /**

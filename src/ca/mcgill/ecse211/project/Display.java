@@ -19,36 +19,36 @@ public class Display implements Runnable {
   // Timeout value
   private long timeout = Long.MAX_VALUE;
   
+  // Position and Map values 
   private double[] position;
   private int mapChoice;
 
-  /**
-   * The main entry point
-   */
   @Override
   public void run() { 
-  
-    lcd.clear();
-  
+
     long updateStart;
     long updateEnd;
-
     long startTime = System.currentTimeMillis();
     do {
+      // Clear the display (leads to flashing)
+      lcd.clear();
       updateStart = System.currentTimeMillis();
       
-      // get US sensor reading
-      //double reading = UltrasonicLocalizer.Localizer.getUSDistance();
-      position = odometer.getXyt();
-      mapChoice = Main.map;
-      // Print US reading and Odometer theta reading
-      DecimalFormat numberFormat = new DecimalFormat("######0.00");
-      lcd.drawString("X: " + numberFormat.format(position[0]), 0, 0);
-      lcd.drawString("Y: " + numberFormat.format(position[1]), 0, 1);
-      lcd.drawString("T: " + numberFormat.format(position[2]), 0, 2);
-      
-      // shows where we want to go
-      lcd.drawString("map: " + numberFormat.format(mapChoice), 0, 3);
+//      // if a color is detected, display the color, otherwise display Odometer readings.
+//      if (!LightSensor.get_color().equals("None       ")) {
+//        lcd.drawString("Object Detected", 0, 0);
+//        lcd.drawString(LightSensor.get_color(), 0, 1);
+//      } else {
+        position = odometer.getXyt();
+        mapChoice = Main.map;
+  
+        // draw x, y, theta values
+        DecimalFormat numberFormat = new DecimalFormat("######0.00");
+        lcd.drawString("X: " + numberFormat.format(position[0]), 0, 0);
+        lcd.drawString("Y: " + numberFormat.format(position[1]), 0, 1);
+        lcd.drawString("T: " + numberFormat.format(position[2]), 0, 2);
+
+//      }
       
       // this ensures that the data is updated only once every period
       updateEnd = System.currentTimeMillis();

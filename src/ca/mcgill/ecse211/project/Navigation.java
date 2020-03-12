@@ -10,25 +10,85 @@ import static ca.mcgill.ecse211.project.Resources.leftMotor;
 import static ca.mcgill.ecse211.project.Resources.odometer;
 import static ca.mcgill.ecse211.project.Resources.rightMotor;
 
+import lejos.hardware.Sound;
+
 public class Navigation {
   
+  /**
+   *  declare values for the difference in (x, y) between destination
+   *  and current location.
+   */
   private static double delta_x;
   private static double delta_y;
   
   /**
-   * Makes the robot travel to the point (x,y).
+   * This method makes the robot go to specified coordinates on the playing field.
+   * 
+   * @param x      The x coordinate of the destination
+   * @param y      The y coordinate of the destination
+   */
+  public static void travelTo(double x, double y) {
+    
+    // orient the robot to face the appropriate angle.
+    Navigation.orient(x,  y);
+    
+    // store initial values for motor tacho count.
+    int init_leftMotorTachoCount = leftMotor.getTachoCount();
+    int init_rightMotorTachoCount = rightMotor.getTachoCount();
+    
+    leftMotor.setSpeed(FORWARD_SPEED);
+    rightMotor.setSpeed(FORWARD_SPEED);
+    leftMotor.forward();
+    rightMotor.forward();
+    
+    // calculate the number of degrees to rotate to reach the desired location.
+    double x_current = odometer.getXyt()[0] / TILE_SIZE;
+    double y_current = odometer.getXyt()[1] / TILE_SIZE;
+    double distance = Math.hypot(x - x_current, y - y_current);
+    int rotationTacho = Navigation.convertDistance(distance * TILE_SIZE);
+    
+    // read the tachoCount rotated by the motor thus far.
+    int leftTCount = leftMotor.getTachoCount() - init_leftMotorTachoCount;
+    int rightTCount = rightMotor.getTachoCount() - init_rightMotorTachoCount;
+    int avgCount = (leftTCount + rightTCount) / 2;
+    
+    while (avgCount < rotationTacho) {
+      
+      // update avgCount value
+      leftTCount = leftMotor.getTachoCount() - init_leftMotorTachoCount;
+      rightTCount = rightMotor.getTachoCount() - init_rightMotorTachoCount;
+      avgCount = (leftTCount + rightTCount) / 2;
+      
+//      // if a color is detected, stop the motors for 10 seconds and beep twice
+//      if (!LightSensor.get_color().equals("None       ")) {
+//        leftMotor.stop(true);
+//        rightMotor.stop(false);
+//        Sound.beep();
+//        Sound.beep();
+//        Main.sleepFor(10000);
+//        leftMotor.forward();
+//        rightMotor.forward();
+//      }
+    } 
+    
+    // arrived at destination, stop motors.
+    leftMotor.stop(true);
+    rightMotor.stop(false);
+  }
+  
+  /**
+   * Makes the robot orient itself in preparation to travel to point (x, y).
    * @param x the x coordinate we want to reach
    * @param y the y coordinate we want to reach
    */
-  public static void travelTo(double x, double y) {
+  public static void orient(double x, double y) {
     rightMotor.setAcceleration(ACCELERATION);
     leftMotor.setAcceleration(ACCELERATION);
-    // we want to go to (x,y)
-    // we first need to know where we are
-    // we convert the odometer reading to feets
-    double x_current = odometer.getX() / TILE_SIZE;
-    double y_current = odometer.getY() / TILE_SIZE;
-    //odometer.setXyt(x_current * TILE_SIZE, y_current * TILE_SIZE, odometer.getTheta() % 360);
+    
+    // we convert the odometer reading to feet
+    double x_current = odometer.getXyt()[0] / TILE_SIZE;
+    double y_current = odometer.getXyt()[1] / TILE_SIZE;
+    
     // we calculate the angle we want to turn
     delta_x = x - x_current;
     delta_y = y - y_current;
@@ -51,13 +111,7 @@ public class Navigation {
       }
     }
     leftMotor.stop(true);
-    rightMotor.stop(false);
-    // now we need to calculate the distance we have to move
-    // distance is in feet (same as tile size)
-    double distance = Math.hypot(delta_x, delta_y);
-    // we move by this distance
-    moveStraightFor(distance);
-    
+    rightMotor.stop(false);    
   }
   
   /**
@@ -66,9 +120,9 @@ public class Navigation {
    * @param target the angle we want to turn to
    */
   public static void turnTo(double target) {
-    double current_theta = odometer.getTheta();
+    double current_theta = odometer.getXyt()[2];
     
-    // we calculate the angle we would turn clockwise and anticlockwise
+    // we calculate the angle we would turn clockwise and anti-clockwise
     double angleTurnedByClockwise = (360 - current_theta + target) % 360;
     double angleTurnedByAntiClockwise = (360 - target + current_theta) % 360;
     
@@ -78,8 +132,6 @@ public class Navigation {
     } else {
       turnByClockwise(angleTurnedByClockwise);
     }
-    
-    
   }
   
   /**
@@ -95,9 +147,9 @@ public class Navigation {
   }
   
   /**
-   * Turns the robot anticlockwise by an angle 'angle'.
+   * Turns the robot anti-clockwise by an angle 'angle'.
    * 
-   * @param angle the angle we are turning by anticlockwise
+   * @param angle the angle we are turning by anti-clockwise
    */
   public static void turnByAntiClockwise(double angle) {
     leftMotor.setSpeed(ROTATE_SPEED);
@@ -117,7 +169,6 @@ public class Navigation {
     leftMotor.rotate(convertDistance(distance * TILE_SIZE), true);
     rightMotor.rotate(convertDistance(distance * TILE_SIZE), false);
   }
-  
   
   /**
    * Converts input distance to the total rotation of each wheel needed to cover that distance.
