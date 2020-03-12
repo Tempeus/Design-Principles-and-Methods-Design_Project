@@ -5,6 +5,7 @@
 \.project
 
 *.prefs
+.settings
 
 Main.jar
 

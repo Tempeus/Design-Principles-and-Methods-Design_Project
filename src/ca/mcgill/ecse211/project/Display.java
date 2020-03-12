@@ -5,6 +5,12 @@ import static ca.mcgill.ecse211.project.Resources.odometer;
 
 import java.text.DecimalFormat;
 
+/**
+ * This class is used to display the content of the odometer variables
+ * such as: X, Y, Theta and Ultrasonic Sensor Distance
+ * @author Kevin
+ *
+ */
 public class Display implements Runnable {
   
   // Refresh period of the display
@@ -16,6 +22,9 @@ public class Display implements Runnable {
   private double[] position;
   private int mapChoice;
 
+  /**
+   * The main entry point
+   */
   @Override
   public void run() { 
   

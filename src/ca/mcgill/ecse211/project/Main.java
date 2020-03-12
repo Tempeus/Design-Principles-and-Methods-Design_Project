@@ -10,19 +10,15 @@ import lejos.hardware.Button;
  */
 public class Main {
 
-  /**
-   * The main entry point.
-   * 
-   * @param args not used
-   */
+
   public static int buttonChoice;
   
   public static int map;
 
   /**
-   * Main method of our Lab Code, runs the solution.
+   * The main entry point.
    * 
-   * @param args Default input argument for main method.
+   * @param args 
    */
   public static void main(String[] args) {
     new Thread(odometer).start();
@@ -34,140 +30,8 @@ public class Main {
     odometer.setXyt(TILE_SIZE, TILE_SIZE, 0);
 
     new Thread(new Display()).start();
-
-
-
-
-    while (Button.waitForAnyPress() != Button.ID_ESCAPE) {
-      buttonChoice = Button.waitForAnyPress();
-      if (buttonChoice == Button.ID_UP) {
-        map = 1;
-      }
-      if (buttonChoice == Button.ID_RIGHT) {
-        map = 2;
-      }
-      if (buttonChoice == Button.ID_DOWN) {
-        map = 3;
-      }
-      if (buttonChoice == Button.ID_LEFT) {
-        map = 4;
-      }
-
-      if (buttonChoice == Button.ID_ENTER) {
-        if (map == 1) {
-          Navigation.travelTo(1, 7);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(4, 4);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(7, 7);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(7, 4);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(4, 1);
-        }
-
-        if (map == 2) {
-          Navigation.travelTo(4, 4);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(1, 7);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(7, 7);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(7, 4);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(4, 1);
-        }
-
-        if (map == 3) {
-          Navigation.travelTo(4, 1);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(7, 4);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(7, 7);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(1, 7);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(4, 4);
-        }
-
-        if (map == 4) {
-          Navigation.travelTo(1, 4);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(4, 7);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(4, 1);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(7, 4);
-          try {
-            Thread.sleep(2000);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-          Navigation.travelTo(7, 7);
-        }
-      }
-      
-    } 
+    
+    //TODO: Implement Rescue
     
     System.exit(0);
   }
@@ -184,7 +48,7 @@ public class Main {
       buttonChoice = Button.waitForAnyPress(); // left or right press
     } while (buttonChoice != Button.ID_ENTER);
     
-    new Thread(new UltrasonicLocalizer()).start();  
+    //TODO: Start localization
   }
   
   /**
