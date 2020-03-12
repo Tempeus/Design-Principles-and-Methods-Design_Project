@@ -10,7 +10,11 @@ import static ca.mcgill.ecse211.project.Resources.rightMotor;
 
 import lejos.hardware.Sound;
 
-
+/**
+ * The class will help the robot to localize on the playing field using light sensors attached to the robot.
+ * @author Kevin
+ *
+ */
 public class LightLocalizer {
   //Array used to store the angles of the black lines
   private static double[] angles = {0, 0, 0, 0};

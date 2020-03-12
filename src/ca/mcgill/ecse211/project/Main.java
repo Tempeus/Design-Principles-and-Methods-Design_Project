@@ -74,4 +74,13 @@ public class Main {
     }
   }
   
+  /**
+   * This method is used to identify if the object is an obstacle or the rescue cart
+   * 
+   * This method will use the goToObject method in the UltrasonicAvoidance class as well as a light sensor thread for the identification process
+   */
+  public static void identifyObstacle() {
+    
+  }
+  
 }

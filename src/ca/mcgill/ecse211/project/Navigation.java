@@ -12,6 +12,12 @@ import static ca.mcgill.ecse211.project.Resources.rightMotor;
 
 import lejos.hardware.Sound;
 
+/**
+ * This class is used to make the robot to precisely travel to specified coordinates on the playing field.
+ * In order to accurately do so, it uses the odometer.
+ * @author Kevin
+ *
+ */
 public class Navigation {
   
   /**
