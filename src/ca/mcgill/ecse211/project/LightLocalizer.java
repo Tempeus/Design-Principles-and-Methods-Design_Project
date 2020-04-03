@@ -4,7 +4,8 @@ import static ca.mcgill.ecse211.project.Resources.BASE_WIDTH;
 import static ca.mcgill.ecse211.project.Resources.TILE_SIZE;
 import static ca.mcgill.ecse211.project.Resources.WHEEL_RAD;
 import static ca.mcgill.ecse211.project.Resources.leftMotor;
-//import static ca.mcgill.ecse211.project.Resources.lightSensor;
+import static ca.mcgill.ecse211.project.Resources.leftColorSensor;
+import static ca.mcgill.ecse211.project.Resources.rightColorSensor;
 import static ca.mcgill.ecse211.project.Resources.odometer;
 import static ca.mcgill.ecse211.project.Resources.rightMotor;
 
@@ -15,7 +16,8 @@ import lejos.hardware.Sound;
  * @author Kevin
  *
  */
-public class LightLocalizer {
+public class LightLocalizer implements Runnable {
+  
   //Array used to store the angles of the black lines
   private static double[] angles = {0, 0, 0, 0};
   
@@ -29,21 +31,43 @@ public class LightLocalizer {
   private static double initialRedValue;
   
   //Variable used to get the red value
-  private static float[] rgbArr = new float[1];
+  private static float[] leftRgbArr = new float[1];
+  private static float[] rightRgbArr = new float[1];
   
   //Threshold to detect lines
   private static int rgbThres = 11;
-
-  /*
-   * Get the red value from the color sensor
-   * @return rgbArr[0] * 100
+  
+  /**
+   * Mode that describes the state of color sensors
    */
-  private static float getRed() {
-//    lightsSensor.getRedMode().fetchSample(rgbArr, 0);
-    return rgbArr[0] * 100;
+  public static boolean on_mode = true;
+  /**
+   * red value variables used to assigned the output of each light sensor
+   */
+  public static float leftRedVal, rightRedVal;
 
-
+  
+  /**
+   * Get red values of both color sensors to continuously update the values of
+   */
+  @Override
+  public void run() {
+    on_mode = true;
+    while(on_mode) {
+      try {
+        leftColorSensor.getRedMode().fetchSample(leftRgbArr, 0);
+        rightColorSensor.getRedMode().fetchSample(rightRgbArr, 0);
+        leftRedVal = leftRgbArr[0] * 100;
+        rightRedVal = rightRgbArr[0] * 100;
+        Thread.sleep(50);
+        
+      } catch(InterruptedException e) {
+       if (on_mode == false)
+         break;
+      }      
+    }
   }
+  
   /**
   * Method used to locate the precise location of the initial position 
   * and adjust the robot to 0 degrees afterwards.
@@ -83,8 +107,6 @@ public class LightLocalizer {
       }
       i++;
     }
-    
-  
     
     double anglesdiff_half = min / 2;
     Navigation.turnTo(angles[mincount] - anglesdiff_half + 180);
@@ -363,4 +385,6 @@ public class LightLocalizer {
     //if left sensor rang first, you must turn right depending on how long the delay is
     //if right sensor rang first, you must turn left depending on how long the delay is
   }
+
+
 }

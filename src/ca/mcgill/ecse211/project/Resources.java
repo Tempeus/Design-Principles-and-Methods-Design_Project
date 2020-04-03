@@ -116,9 +116,20 @@ public class Resources {
       new EV3UltrasonicSensor(LocalEV3.get().getPort("S1"));
   
   /**
-   * The color sensor.
+   * The left color sensor.
    */
-  public static final EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S2);
+  public static final EV3ColorSensor leftColorSensor = new EV3ColorSensor(SensorPort.S2);
+  
+  /**
+   * The right color sensor
+   */
+  public static final EV3ColorSensor rightColorSensor = new EV3ColorSensor(SensorPort.S3);
+  
+  /**
+   * The color sensor in the back
+   * Used to identify if the object is a wall or the objective cart
+   */
+  public static final EV3ColorSensor backColorSensor = new EV3ColorSensor(SensorPort.S4);
 
   /**
    * The limit of invalid samples that we read from the US sensor before assuming no obstacle.
