@@ -16,6 +16,39 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
  */
 public class Resources {
   
+  /* WIFI SETUP RESOURCES*/
+  
+ //Set these as appropriate for your team and current situation
+ /**
+  * The default server IP used by the profs and TA's.
+  */
+ public static final String DEFAULT_SERVER_IP = "192.168.2.3";
+ 
+ /**
+  * The IP address of the server that transmits data to the robot. For the beta demo and
+  * competition, replace this line with
+  * 
+  * <p>{@code public static final String SERVER_IP = DEFAULT_SERVER_IP;}
+  */
+ public static final String SERVER_IP = "192.168.2.3"; // = DEFAULT_SERVER_IP;
+ 
+ /**
+  * Your team number.
+  */
+ public static final int TEAM_NUMBER = 13;
+ 
+ /** 
+  * Enables printing of debug info from the WiFi class. 
+  */
+ public static final boolean ENABLE_DEBUG_WIFI_PRINT = true;
+ 
+ /**
+  * Enable this to attempt to receive Wi-Fi parameters at the start of the program.
+  */
+ public static final boolean RECEIVE_WIFI_PARAMS = true;
+ 
+ /* PROJECT VARIABLES */
+ 
   /**
    * 45 Degrees
    */

@@ -7,7 +7,9 @@ import static ca.mcgill.ecse211.project.Resources.leftMotor;
 import static ca.mcgill.ecse211.project.Resources.leftColorSensor;
 import static ca.mcgill.ecse211.project.Resources.rightColorSensor;
 import static ca.mcgill.ecse211.project.Resources.odometer;
+import static ca.mcgill.ecse211.project.Resources.ROTATE_SPEED;
 import static ca.mcgill.ecse211.project.Resources.rightMotor;
+import static ca.mcgill.ecse211.project.Resources.LIGHTSENSOR_OFFSET;
 
 import lejos.hardware.Sound;
 
@@ -72,25 +74,35 @@ public class LightLocalizer implements Runnable {
   * Method used to locate the precise location of the initial position 
   * and adjust the robot to 0 degrees afterwards.
   */
-
   public void localize() {
-    leftMotor.setSpeed(40);
-    rightMotor.setSpeed(40);
-    leftMotor.backward();
-    rightMotor.forward();
-    angleIndex = 0;
+   //Turn robot to 45 degrees
+    leftMotor.setSpeed(ROTATE_SPEED);
+    rightMotor.setSpeed(ROTATE_SPEED);
+    initialRedValue = leftRedVal;
+    Navigation.turnTo(45);
     
-    //get initial red value and then compare it to when it's reading a black line
-    initialRedValue = getRed(); 
+    //Proceed forward until the color sensors detect lines
+    while(Math.abs(leftRedVal - initialRedValue) < rgbThres || Math.abs(rightRedVal - initialRedValue) < rgbThres) {
+      leftMotor.forward();
+      rightMotor.forward();
+    }
+    leftMotor.stop(true);
+    rightMotor.stop(false);
+    
+    //Move back offset/3 since the light sensors detected the line in a 45 degree angle, therefore the robot is offset/3 away from the line
+    leftMotor.rotate(Navigation.convertDistance(- LIGHTSENSOR_OFFSET / 3), true);
+    rightMotor.rotate(Navigation.convertDistance(- LIGHTSENSOR_OFFSET / 3), false);
+    
     while (angleIndex < 4) {
       //When it hits a black line, record the angle
-      if (Math.abs(getRed() - initialRedValue) > rgbThres) {
+      if (Math.abs(leftRedVal - initialRedValue) > rgbThres) {
         angles[angleIndex] = odometer.getXyt()[2];
         Main.sleepFor(200);
         angleIndex++;
         Sound.beep();
       }
     }
+    
     leftMotor.stop(true);
     rightMotor.stop(false);
     anglesdiff[0] = cal_angle_diff(angles[0],angles[1]);
@@ -114,129 +126,12 @@ public class LightLocalizer implements Runnable {
     while (Math.abs(getRed() - initialRedValue) < rgbThres) {
       forward();
     }
+    
     stopMotors();
     moveBackFor(0.5577427822); //move back for 17cm which is 0.5577427822 tilesize.
     turnleftBy(44);
     odometer.setXyt(TILE_SIZE, TILE_SIZE, 0);
   }
-  
-  /**
-   * Method used to localize the robot when there are no walls around.
-   * It will localize itself to a precise location using the x and y coordinates
-   * @param target_x   The x-coordinate of the target
-   * @param target_y   The y-coordinate of the target
-   */
-  public static void localize_not_corner(int target_x, int target_y) {
-    leftMotor.setSpeed(50);
-    rightMotor.setSpeed(50);
-    leftMotor.backward();
-    rightMotor.forward();
-    angleIndex = 0;
-    
-    //get initial red value and then compare it to when it's reading a black line
-    initialRedValue = getRed();
-    
-    
-    while (angleIndex < 4) {
-      //When it hits a black line, record the angle
-      if (Math.abs(getRed() - initialRedValue) > rgbThres) {
-        angles[angleIndex] = odometer.getXyt()[2];
-        angleIndex++;
-        Sound.beep();
-        Main.sleepFor(200);
-      }
-    }
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-    anglesdiff[0] = cal_angle_diff(angles[0],angles[1]);
-    anglesdiff[1] = cal_angle_diff(angles[1],angles[2]);
-    anglesdiff[2] = cal_angle_diff(angles[2],angles[3]);
-    anglesdiff[3] = cal_angle_diff(angles[3],angles[0]);
-    int i = 1;
-    double min = anglesdiff[0];
-    int mincount = 0;
-    while (i < 4) {
-      if (min > anglesdiff[i]) {
-        min = anglesdiff[i];
-        mincount = i;
-        
-      }
-      i++;
-    }
-    
-    if (angles[mincount] > 0 && angles[mincount] <= 90) {   
-      // target point is in 1st quadrant
-      double deltay = -17 * Math.cos(cal_angle_diff(angles[mincount], 
-          angles[(mincount + 2) % 4] / 2));
-      double deltax = -17 * Math.cos(cal_angle_diff(angles[mincount + 1], 
-          angles[(mincount + 3) % 4] / 2));
-      
-      //update dx dy 
-      odometer.update(deltax, deltax, 0);
-      
-      //travel to nearest point
-      Navigation.travelTo(target_x, target_y);
-      while (Math.abs(getRed() - initialRedValue) < rgbThres) {
-        turnLeft();
-      }
-      stopMotors();
-      
-      //update theta =0
-      odometer.setTheta(0);
-    } else if (angles[mincount] > 180 && angles[mincount] <= 270) {      
-      // target point is in 3rd quadrant
-      double deltay = 17 * Math.cos(cal_angle_diff(angles[mincount], 
-          angles[(mincount + 2) % 4] / 2));
-      double deltax = 17 * Math.cos(cal_angle_diff(angles[mincount + 1],
-          angles[(mincount + 3) % 4] / 2));
-      //update dx dy 
-      odometer.update(deltax, deltax, 0);
-      
-      //travel to nearest point
-      Navigation.travelTo(target_x, target_y);
-      while (Math.abs(getRed() - initialRedValue) < rgbThres) {
-        turnLeft();
-      }
-      stopMotors();
-      //update theta = 180
-      odometer.setTheta(180);
-    } else if (angles[mincount] > 270 && angles[mincount] <= 360) {     
-      // target point is in 2nd quadrant
-      double deltax = 17 * Math.cos(cal_angle_diff(angles[mincount], 
-          angles[(mincount + 2) % 4] / 2));
-      double deltay = -17 * Math.cos(cal_angle_diff(angles[mincount + 1], 
-          angles[(mincount + 3) % 4] / 2));
-      //update x y 
-      odometer.update(deltax, deltax, 0);
-      
-      //travel to nearest point
-      Navigation.travelTo(target_x, target_y);
-      while (Math.abs(getRed() - initialRedValue) < rgbThres) {
-        turnRight();
-      }
-      stopMotors();
-      //update theta = 0
-      odometer.setTheta(0);
-    } else if (angles[mincount] > 90 && angles[mincount] <= 180) {  
-      // target point is in 4th quadrant
-      double deltax = -17 * Math.cos(cal_angle_diff(angles[mincount], 
-          angles[(mincount + 2) % 4] / 2));
-      double deltay = 17 * Math.cos(cal_angle_diff(angles[mincount + 1], 
-          angles[(mincount + 3) % 4] / 2));
-      //update x y 
-      odometer.update(deltax, deltax, 0);
-      
-      //travel to nearest point
-      Navigation.travelTo(target_x, target_y);
-      while (Math.abs(getRed() - initialRedValue) < rgbThres) {
-        turnRight();
-      }
-      stopMotors();
-      //update theta = 180
-      odometer.setTheta(180);
-    }
-  }
-  
   
   /**
    * This method is responsible to find the smallest difference of two angles.

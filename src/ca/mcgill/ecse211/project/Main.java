@@ -13,6 +13,9 @@ public class Main {
   public static int buttonChoice;
   
   public static int map;
+  
+  private static LightLocalizer lightlocalize = new LightLocalizer();
+  private static Thread LightLocalizeSensor = new Thread(lightlocalize);
 
   /**
    * Main method of our Lab Code, runs the solution.
@@ -21,14 +24,15 @@ public class Main {
    */
   public static void main(String[] args) {
     new Thread(odometer).start();
-    // we want to move by x and y in x and y directions respectively
-    map = 0;
+        
+    // TODO: set initial conditions (where the bridge is located and etc)
     
     // robot localizes itself and moves to origin 
-    localize();
-    odometer.setXyt(TILE_SIZE, TILE_SIZE, 0);
+    LightLocalizeSensor.start();
+    lightlocalize.localize();
 
     new Thread(new Display()).start();
+
     
     // TODO: Navigate past the bridge
     
@@ -36,24 +40,9 @@ public class Main {
     
     // TODO: Rescue Initiatiated
     
-    // TODO: Navigate and avoid obstancles back to base
+    // TODO: Navigate and avoid obstacles back to base
     
     System.exit(0);
-  }
-  
-  /**
-   * This method waits for the user to press enter.
-   * As soon as enter is pressed, the robot localizes itself
-   * and moves to the origin.
-   */
-  public static void localize() {
-    int buttonChoice;
-    Display.showText("Press enter");
-    do {
-      buttonChoice = Button.waitForAnyPress(); // left or right press
-    } while (buttonChoice != Button.ID_ENTER);
-    
-    new LightLocalizer().localize();  
   }
   
   /**
