@@ -14,15 +14,17 @@ public class UltrasonicAvoidance {
    * This method will use the odometer as well as the ultrasonic sensor in order to precisely identify the location of the robot
    */
   public void detectObstacles() {
+    //Turn robot around 360 degrees
     
+    //detect objects that are within 255 cms and store the detection into an array queue with the respected theta
   }
   
   /**
    * This method is used after detecting all the objects in the area, the robot will travel to a specific object in order to
    * identify if its the rescue cart or an obstacle
-   * 
    */
   public void goToObject() {
+    //pop from the queue and go to the object's direction
     
   }
 }

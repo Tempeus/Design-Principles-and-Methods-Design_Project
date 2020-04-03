@@ -355,4 +355,12 @@ public class LightLocalizer {
     leftMotor.stop(true);
     rightMotor.stop(false);
   }
+  
+  /**
+   * This method is used for the robot to adjust itself when it detect itself travelling not in a straight line.
+   */
+  public static void lightAdjustment() {
+    //if left sensor rang first, you must turn right depending on how long the delay is
+    //if right sensor rang first, you must turn left depending on how long the delay is
+  }
 }

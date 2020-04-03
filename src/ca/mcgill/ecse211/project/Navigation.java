@@ -65,16 +65,6 @@ public class Navigation {
       rightTCount = rightMotor.getTachoCount() - init_rightMotorTachoCount;
       avgCount = (leftTCount + rightTCount) / 2;
       
-//      // if a color is detected, stop the motors for 10 seconds and beep twice
-//      if (!LightSensor.get_color().equals("None       ")) {
-//        leftMotor.stop(true);
-//        rightMotor.stop(false);
-//        Sound.beep();
-//        Sound.beep();
-//        Main.sleepFor(10000);
-//        leftMotor.forward();
-//        rightMotor.forward();
-//      }
     } 
     
     // arrived at destination, stop motors.

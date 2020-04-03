@@ -75,7 +75,10 @@ public class Main {
    * This method will use the goToObject method in the UltrasonicAvoidance class as well as a light sensor thread for the identification process
    */
   public static void identifyObstacle() {
+   //Use Ultrasonic sensor to detect the obstacle and making sure it's there
     
+    //Use light sensor to detect to see if it is a wall
+    //if light sensor detects something, then it is a wall
+    //Otherwise it is the object cart
   }
-  
 }

@@ -12,6 +12,10 @@ public class Rescue {
    * Essentially, the claw will rotate to trap the rescue cart and lock the motors
    */
   public void performRescue() {
-    
+    //go back a few steps
+    //turn 180 degrees
+    //go forward the same few steps
+    //activate claws
+    //lock the claws
   }
 }

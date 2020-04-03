@@ -34,11 +34,6 @@ public class Display implements Runnable {
       lcd.clear();
       updateStart = System.currentTimeMillis();
       
-//      // if a color is detected, display the color, otherwise display Odometer readings.
-//      if (!LightSensor.get_color().equals("None       ")) {
-//        lcd.drawString("Object Detected", 0, 0);
-//        lcd.drawString(LightSensor.get_color(), 0, 1);
-//      } else {
         position = odometer.getXyt();
         mapChoice = Main.map;
   
