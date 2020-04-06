@@ -32,7 +32,7 @@ public class UltrasonicAvoidance {
    * This method will make the robot navigate around obstacles in in front of the robot.
    * The robot will 
    */
-  public void avoidObstacle() {
+  public static void avoidObstacle() {
     
   }
 }

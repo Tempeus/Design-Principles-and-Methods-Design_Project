@@ -4,6 +4,7 @@ import static ca.mcgill.ecse211.project.Resources.TILE_SIZE;
 import static ca.mcgill.ecse211.project.Resources.odometer;
 import static ca.mcgill.ecse211.project.Resources.backColorSensor;
 import static ca.mcgill.ecse211.project.Resources.leftColorSensor;
+import static ca.mcgill.ecse211.project.Resources.ultraSonicSensor;
 import lejos.hardware.Button;
 
 /**
@@ -15,6 +16,11 @@ public class Main {
    * Variable used to get the red value on the back light sensor
    */
   private static float[] backRgbArr = new float[1];
+  
+  /**
+   * variable used to capture the direct output of the US sensor
+   */
+  private static float[] us_Data = new float[1];
   
   /**
    * red value variables used to assigned the output of the back light sensor
@@ -80,20 +86,30 @@ public class Main {
    *         false   if the object is not the objective
    */
   public static boolean identifyObstacle() {
-    //Use Ultrasonic sensor to detect the obstacle and making sure it's there
+    //Use Ultrasonic sensor to detect the obstacle and making sure it's there  
+    ultraSonicSensor.getDistanceMode().fetchSample(us_Data, 0);
+    double distance = us_Data[0];   
     
-    //Use light sensor to detect to see if it is a wall
-    backColorSensor.getRedMode().fetchSample(backRgbArr, 0);
-    backRedVal = backRgbArr[0] * 100;
-    
-    //if light sensor detects something, then it is a wall
-    if(Math.abs(backRedVal - LightLocalizer.initialRedValue) > LightLocalizer.rgbThres) {
-      return false;      
+    //filter out TODO
+    if(distance <= 255) {  
+      //Use light sensor to detect to see if it is a wall
+      backColorSensor.getRedMode().fetchSample(backRgbArr, 0);
+      backRedVal = backRgbArr[0] * 100;
+      
+      //if light sensor detects something, then it is a wall.
+      if(Math.abs(backRedVal - LightLocalizer.initialRedValue) > LightLocalizer.rgbThres) {
+        //Avoid obstacle
+        UltrasonicAvoidance.avoidObstacle();
+        return false;      
+      }
+      //Otherwise it is the object cart
+      else{
+        rescue.performRescue();   
+        return true;
+      }
     }
-    //Otherwise it is the object cart
-    else{
-      rescue.performRescue();   
-      return true;
+    else {
+      return false;
     }
   }
 }
