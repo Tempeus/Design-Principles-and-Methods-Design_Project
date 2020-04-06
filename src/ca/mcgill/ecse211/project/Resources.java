@@ -16,6 +16,39 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
  */
 public class Resources {
   
+  /* WIFI SETUP RESOURCES*/
+  
+ //Set these as appropriate for your team and current situation
+ /**
+  * The default server IP used by the profs and TA's.
+  */
+ public static final String DEFAULT_SERVER_IP = "192.168.2.3";
+ 
+ /**
+  * The IP address of the server that transmits data to the robot. For the beta demo and
+  * competition, replace this line with
+  * 
+  * <p>{@code public static final String SERVER_IP = DEFAULT_SERVER_IP;}
+  */
+ public static final String SERVER_IP = "192.168.2.3"; // = DEFAULT_SERVER_IP;
+ 
+ /**
+  * Your team number.
+  */
+ public static final int TEAM_NUMBER = 11;
+ 
+ /** 
+  * Enables printing of debug info from the WiFi class. 
+  */
+ public static final boolean ENABLE_DEBUG_WIFI_PRINT = true;
+ 
+ /**
+  * Enable this to attempt to receive Wi-Fi parameters at the start of the program.
+  */
+ public static final boolean RECEIVE_WIFI_PARAMS = true;
+ 
+ /* PROJECT VARIABLES */
+ 
   /**
    * 45 Degrees
    */
@@ -110,20 +143,46 @@ public class Resources {
   public static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.D);
   
   /**
+   * The right claw motor
+   */
+  public static final EV3LargeRegulatedMotor rightClawMotor = new EV3LargeRegulatedMotor(MotorPort.B);
+  
+  /**
+   * the left claw motor
+   */
+  public static final EV3LargeRegulatedMotor leftClawMotor = new EV3LargeRegulatedMotor(MotorPort.C);
+  
+  /**
    * The ultrasonic sensor.
    */
   public static final EV3UltrasonicSensor ultraSonicSensor =
       new EV3UltrasonicSensor(LocalEV3.get().getPort("S1"));
   
   /**
-   * The color sensor.
+   * The left color sensor.
    */
-  public static final EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S2);
+  public static final EV3ColorSensor leftColorSensor = new EV3ColorSensor(SensorPort.S2);
+  
+  /**
+   * The right color sensor
+   */
+  public static final EV3ColorSensor rightColorSensor = new EV3ColorSensor(SensorPort.S3);
+  
+  /**
+   * The color sensor in the back
+   * Used to identify if the object is a wall or the objective cart
+   */
+  public static final EV3ColorSensor backColorSensor = new EV3ColorSensor(SensorPort.S4);
 
   /**
    * The limit of invalid samples that we read from the US sensor before assuming no obstacle.
    */
   public static final int INVALID_SAMPLE_LIMIT = 20;
+  
+  /**
+   * Distance between the center of rotation and the Ultrasonic sensor.
+   */
+  public static final double SENSOR_DISPLACEMENT = 6.0;
   
   /**
    * The LCD.

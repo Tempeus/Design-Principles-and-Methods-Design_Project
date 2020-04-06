@@ -58,18 +58,55 @@ public class Odometer implements Runnable {
 
   private static Odometer odo; // Returned as singleton
 
-  // Motor-related variables
+  /**
+   * The tachometer count for the left motor.
+   */
   private static int leftMotorTachoCount = 0;
-  private static int rightMotorTachoCount = 0;
-  private static int leftMotorTachoCount_old = leftMotorTachoCount;
-  private static int rightMotorTachoCount_old = rightMotorTachoCount;
-  private static double left_displace;
-  private static double right_displace;
-  private static double delta_displace;
-  private static double delta_theta;
-  private static double delta_x;
-  private static double delta_y;
   
+  /**
+   * The tachometer count for the right motor.
+   */
+  private static int rightMotorTachoCount = 0;
+  
+  /**
+   * The previous tachometer count for the left motor.
+   */
+  private static int leftMotorTachoCount_old = leftMotorTachoCount;
+  
+  /**
+   * The previous tachometer count for the right motor.
+   */
+  private static int rightMotorTachoCount_old = rightMotorTachoCount;
+  
+  /**
+   * The left motor displacement
+   */
+  private static double left_displace;
+  
+  /**
+   * The right motor displacement
+   */
+  private static double right_displace;
+  
+  /**
+   * The difference of both displacements
+   */
+  private static double delta_displace;
+  
+  /**
+   * Delta theta
+   */
+  private static double delta_theta;
+  
+  /**
+   * Delta x
+   */
+  private static double delta_x;
+  
+  /**
+   * Delta y
+   */
+  private static double delta_y;
 
   /**
    * The odometer update period in ms.

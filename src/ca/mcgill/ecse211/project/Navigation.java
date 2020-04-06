@@ -59,22 +59,16 @@ public class Navigation {
     int avgCount = (leftTCount + rightTCount) / 2;
     
     while (avgCount < rotationTacho) {
+      //Make sure that robot is moving in a straight line
+      if(LightLocalizer.checkSensors() == false) {
+        LightLocalizer.lightAdjustment();
+      }
       
       // update avgCount value
       leftTCount = leftMotor.getTachoCount() - init_leftMotorTachoCount;
       rightTCount = rightMotor.getTachoCount() - init_rightMotorTachoCount;
       avgCount = (leftTCount + rightTCount) / 2;
       
-//      // if a color is detected, stop the motors for 10 seconds and beep twice
-//      if (!LightSensor.get_color().equals("None       ")) {
-//        leftMotor.stop(true);
-//        rightMotor.stop(false);
-//        Sound.beep();
-//        Sound.beep();
-//        Main.sleepFor(10000);
-//        leftMotor.forward();
-//        rightMotor.forward();
-//      }
     } 
     
     // arrived at destination, stop motors.
@@ -197,4 +191,10 @@ public class Navigation {
     return convertDistance(Math.PI * BASE_WIDTH * angle / 360.0);
   }
   
+  /**
+   * This navigation method is used to help the robot go past the bridge before initiating the search for the rescue cart
+   */
+  public static void goPastBridge() {
+    
+  }
 }
