@@ -1,11 +1,6 @@
 package ca.mcgill.ecse211.project;
 
-import static ca.mcgill.ecse211.project.Resources.TILE_SIZE;
 import static ca.mcgill.ecse211.project.Resources.odometer;
-import static ca.mcgill.ecse211.project.Resources.backColorSensor;
-import static ca.mcgill.ecse211.project.Resources.leftColorSensor;
-import static ca.mcgill.ecse211.project.Resources.ultraSonicSensor;
-import lejos.hardware.Button;
 
 /**
  * The main driver class for the project.
