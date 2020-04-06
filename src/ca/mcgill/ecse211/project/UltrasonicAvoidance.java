@@ -27,4 +27,9 @@ public class UltrasonicAvoidance {
     //pop from the queue and go to the object's direction
     
   }
+  
+  
+  public void avoidObstacle() {
+    
+  }
 }

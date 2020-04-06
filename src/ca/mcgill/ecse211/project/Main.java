@@ -14,6 +14,8 @@ public class Main {
   
   public static int map;
   
+  private static UltrasonicLocalize ultrasoniclocalize = new UltrasonicLocalize();
+  private static Thread UltrasonicLocalizeSensor = new Thread(ultrasoniclocalize);
   private static LightLocalizer lightlocalize = new LightLocalizer();
   private static Thread LightLocalizeSensor = new Thread(lightlocalize);
 
@@ -28,6 +30,9 @@ public class Main {
     // TODO: set initial conditions (where the bridge is located and etc)
     
     // robot localizes itself and moves to origin 
+    UltrasonicLocalizeSensor.start();
+    ultrasoniclocalize.stopThread(UltrasonicLocalizeSensor);
+    
     LightLocalizeSensor.start();
     lightlocalize.localize();
 

@@ -8,8 +8,10 @@ import static ca.mcgill.ecse211.project.Resources.leftColorSensor;
 import static ca.mcgill.ecse211.project.Resources.rightColorSensor;
 import static ca.mcgill.ecse211.project.Resources.odometer;
 import static ca.mcgill.ecse211.project.Resources.ROTATE_SPEED;
+import static ca.mcgill.ecse211.project.Resources.ACCELERATION;
 import static ca.mcgill.ecse211.project.Resources.rightMotor;
 import static ca.mcgill.ecse211.project.Resources.LIGHTSENSOR_OFFSET;
+import static ca.mcgill.ecse211.project.Resources.FORWARD_SPEED;
 
 import lejos.hardware.Sound;
 
@@ -20,34 +22,60 @@ import lejos.hardware.Sound;
  */
 public class LightLocalizer implements Runnable {
   
-  //Array used to store the angles of the black lines
+  /**
+   * Array used to store the angles of the black lines
+   */
   private static double[] angles = {0, 0, 0, 0};
   
-  //Array used to store angle differences.
+  /**
+   * Array used to store angle differences.
+   */
   private static double[] anglesdiff = {0, 0, 0, 0};
   
-  //To detect how many points it detected
+  /**
+   * To detect how many points it detected
+   */
   private static int angleIndex = 0;
   
-  //Initial red value of board
+  /**
+   * Initial red value of board
+   */
   private static double initialRedValue;
   
-  //Variable used to get the red value
+  /**
+   * Variable used to get the red value on the left light sensor
+   */
   private static float[] leftRgbArr = new float[1];
+  
+  /**
+   * Variable used to get the red value on the right light sensor
+   */
   private static float[] rightRgbArr = new float[1];
   
-  //Threshold to detect lines
+  /**
+   * Threshold to detect lines
+   */
   private static int rgbThres = 11;
   
   /**
    * Mode that describes the state of color sensors
    */
   public static boolean on_mode = true;
+  
   /**
    * red value variables used to assigned the output of each light sensor
    */
   public static float leftRedVal, rightRedVal;
-
+  
+  /**
+   * boolean used to identify if the right light sensor detects a line
+   */
+  public static boolean rightLineDetect = true;
+  
+  /**
+   * boolean used to identify if the left light sensor detected a line.
+   */
+  public static boolean leftLineDetect = true;
   
   /**
    * Get red values of both color sensors to continuously update the values of
@@ -89,48 +117,13 @@ public class LightLocalizer implements Runnable {
     leftMotor.stop(true);
     rightMotor.stop(false);
     
-    //Move back offset/3 since the light sensors detected the line in a 45 degree angle, therefore the robot is offset/3 away from the line
-    leftMotor.rotate(Navigation.convertDistance(- LIGHTSENSOR_OFFSET / 3), true);
-    rightMotor.rotate(Navigation.convertDistance(- LIGHTSENSOR_OFFSET / 3), false);
+    //Make the robot turn left until the left sensor finds it
     
-    while (angleIndex < 4) {
-      //When it hits a black line, record the angle
-      if (Math.abs(leftRedVal - initialRedValue) > rgbThres) {
-        angles[angleIndex] = odometer.getXyt()[2];
-        Main.sleepFor(200);
-        angleIndex++;
-        Sound.beep();
-      }
-    }
+    //make the robot turn right until the right sensor finds it
     
-    leftMotor.stop(true);
-    rightMotor.stop(false);
-    anglesdiff[0] = cal_angle_diff(angles[0],angles[1]);
-    anglesdiff[1] = cal_angle_diff(angles[1],angles[2]);
-    anglesdiff[2] = cal_angle_diff(angles[2],angles[3]);
-    anglesdiff[3] = cal_angle_diff(angles[3],angles[0]);
-    int i = 1;
-    double min = anglesdiff[0];
-    int mincount = 0;
-    while (i < 4) {
-      if (min > anglesdiff[i]) {
-        min = anglesdiff[i];
-        mincount = i;
-      }
-      i++;
-    }
+    //do calculations
     
-    double anglesdiff_half = min / 2;
-    Navigation.turnTo(angles[mincount] - anglesdiff_half + 180);
-    
-    while (Math.abs(getRed() - initialRedValue) < rgbThres) {
-      forward();
-    }
-    
-    stopMotors();
-    moveBackFor(0.5577427822); //move back for 17cm which is 0.5577427822 tilesize.
-    turnleftBy(44);
-    odometer.setXyt(TILE_SIZE, TILE_SIZE, 0);
+    //turn robot back to facing north
   }
   
   /**
@@ -153,46 +146,6 @@ public class LightLocalizer implements Runnable {
     } else {
       return a;
     }
-  }
-  
-  /**
-   * continuously turn left.
-   */  
-  public static void turnLeft() {
-    rightMotor.forward();
-    leftMotor.backward();
-    rightMotor.setSpeed(40);
-    leftMotor.setSpeed(40);
-  }  
-  
-  /**
-   * continuously turn right.
-   */
-  public static void turnRight() {
-    rightMotor.backward();
-    leftMotor.forward();
-    rightMotor.setSpeed(40);
-    leftMotor.setSpeed(40);
-  }
-  
-  /**
-   * Robot goes straight forward.
-   */
-  public void forward() {
-    rightMotor.forward();
-    leftMotor.forward();
-    rightMotor.setSpeed(40);
-    leftMotor.setSpeed(40);
-  }
-  
-  /**
-   * Robot goes straight backward.
-   */
-  public void backward() {
-    rightMotor.backward();
-    leftMotor.backward();
-    rightMotor.setSpeed(40);
-    leftMotor.setSpeed(40);
   }
   
   /**
@@ -236,16 +189,6 @@ public class LightLocalizer implements Runnable {
   }
   
   /**
-   * Sets the acceleration of both motors.
-   * 
-   * @param acceleration the acceleration in degrees per second squared
-   */
-  public static void setAcceleration(int acceleration) {
-    leftMotor.setAcceleration(acceleration);
-    rightMotor.setAcceleration(acceleration);
-  }
-  
-  /**
    * Moves the robot straight for the given distance.
    * 
    * @param distance in feet (tile sizes), may be negative
@@ -266,20 +209,83 @@ public class LightLocalizer implements Runnable {
   }
   
   /**
-  * stop both motors.
-  */
-  public static void stopMotors() {
-    leftMotor.stop(true);
-    rightMotor.stop(false);
+   * This method is ran constantly during a thread of the robot's navigation. 
+   * It is used to help the robot calibrate itself to move in a straight line.
+   * It is used to detect lines using the color sensor while the robot is moving.
+   * Whenever one sensor detects a line, it will check if the other sensor also detects a line.
+   * If it does, it will set one of the boolean variables associated to the sensors to false.
+   * 
+   * @return true   if all the sensors detects a line
+   *         false  if one of the sensors does not detect a line.
+   */
+  public static boolean checkSensors() {
+    //Default booleans set to true
+    rightLineDetect = true;
+    leftLineDetect = true;
+    
+    //If the left sensor detects the line first
+    if (Math.abs(leftRedVal - initialRedValue) > rgbThres) {
+      leftMotor.stop(true);
+      rightMotor.stop(false);
+      //if the right sensor does not detect a line
+      if(Math.abs(rightRedVal - initialRedValue) < rgbThres) {
+        rightLineDetect = false;
+        return false;
+      }
+    }
+    
+    //if the right sensor detects the line first
+    else if(Math.abs(rightRedVal - initialRedValue) > rgbThres) {
+      leftMotor.stop(true);
+      rightMotor.stop(false);
+      //if the left sensor does not detect a line
+      if(Math.abs(leftRedVal - initialRedValue) < rgbThres) {
+        leftLineDetect = false;
+        return false;
+      }
+    }
+    return true;
   }
   
   /**
-   * This method is used for the robot to adjust itself when it detect itself travelling not in a straight line.
+   * This method is responsible to correct the robot's trajectory by using two light sensors to detect lines on the playing field.
+   * When one of the light sensors detect a line, it will make sure that the other sensor also detects the line.
+   * If the other sensor does detect a line at the same time, that means the robot is moving in a straight line.
+   * Other wise, the robot will stop and run the motor that is on the same side of the sensor until it detects a line.
+   * This will make the robot face straight.
+   * 
+   * @return boolean     true if it successfully adjusted
+   *                     false if it unsuccessfully adjusted
    */
-  public static void lightAdjustment() {
-    //if left sensor rang first, you must turn right depending on how long the delay is
-    //if right sensor rang first, you must turn left depending on how long the delay is
+  public static boolean lightAdjustment() {
+    leftMotor.stop(true);
+    rightMotor.stop(false);
+    
+    //if left sensor doesn't detect a line, 
+    if(leftLineDetect == false) {
+      //turn left motor until it detects a line
+      while(true) {
+        if(Math.abs(rightRedVal - initialRedValue) > rgbThres) {
+          leftMotor.stop(true);
+          rightMotor.stop(false);
+          break;
+        }
+        leftMotor.forward();
+      }
+    }
+    
+    //if right sensor doesn't detect a line
+    else if(rightLineDetect == false) {
+      //turn right motor until it detects a line
+      while(true) {
+        if(Math.abs(leftRedVal - initialRedValue) > rgbThres) {
+          leftMotor.stop(true);
+          rightMotor.stop(false);
+          break;
+        }
+        rightMotor.forward();
+      }
+    }
+    return true;
   }
-
-
 }

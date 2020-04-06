@@ -35,7 +35,7 @@ public class Resources {
  /**
   * Your team number.
   */
- public static final int TEAM_NUMBER = 13;
+ public static final int TEAM_NUMBER = 11;
  
  /** 
   * Enables printing of debug info from the WiFi class. 
@@ -168,6 +168,11 @@ public class Resources {
    * The limit of invalid samples that we read from the US sensor before assuming no obstacle.
    */
   public static final int INVALID_SAMPLE_LIMIT = 20;
+  
+  /**
+   * Distance between the center of rotation and the Ultrasonic sensor.
+   */
+  public static final double SENSOR_DISPLACEMENT = 6.0;
   
   /**
    * The LCD.
