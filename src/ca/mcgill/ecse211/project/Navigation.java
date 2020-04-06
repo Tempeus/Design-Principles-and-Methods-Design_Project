@@ -59,6 +59,10 @@ public class Navigation {
     int avgCount = (leftTCount + rightTCount) / 2;
     
     while (avgCount < rotationTacho) {
+      //Make sure that robot is moving in a straight line
+      if(LightLocalizer.checkSensors() == false) {
+        LightLocalizer.lightAdjustment();
+      }
       
       // update avgCount value
       leftTCount = leftMotor.getTachoCount() - init_leftMotorTachoCount;
@@ -187,4 +191,10 @@ public class Navigation {
     return convertDistance(Math.PI * BASE_WIDTH * angle / 360.0);
   }
   
+  /**
+   * This navigation method is used to help the robot go past the bridge before initiating the search for the rescue cart
+   */
+  public static void goPastBridge() {
+    
+  }
 }

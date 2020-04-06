@@ -13,15 +13,20 @@ import java.text.DecimalFormat;
  */
 public class Display implements Runnable {
   
-  // Refresh period of the display
+  /**
+   * The refresh period of the display
+   */
   private static final long DISPLAY_PERIOD = 25;
   
-  // Timeout value
+  /**
+   * The timeout value
+   */
   private long timeout = Long.MAX_VALUE;
   
-  // Position and Map values 
+  /**
+   * The positions obtained by the odometer
+   */
   private double[] position;
-  private int mapChoice;
 
   @Override
   public void run() { 
@@ -35,7 +40,6 @@ public class Display implements Runnable {
       updateStart = System.currentTimeMillis();
       
         position = odometer.getXyt();
-        mapChoice = Main.map;
   
         // draw x, y, theta values
         DecimalFormat numberFormat = new DecimalFormat("######0.00");
@@ -43,9 +47,6 @@ public class Display implements Runnable {
         lcd.drawString("Y: " + numberFormat.format(position[1]), 0, 1);
         lcd.drawString("T: " + numberFormat.format(position[2]), 0, 2);
 
-//      }
-      
-      // this ensures that the data is updated only once every period
       updateEnd = System.currentTimeMillis();
       if (updateEnd - updateStart < DISPLAY_PERIOD) {
         Main.sleepFor(DISPLAY_PERIOD - (updateEnd - updateStart));

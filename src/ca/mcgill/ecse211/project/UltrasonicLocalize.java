@@ -11,15 +11,24 @@ import static ca.mcgill.ecse211.project.Resources.rightMotor;
 import static ca.mcgill.ecse211.project.Resources.ultraSonicSensor;
 import lejos.hardware.Button;
 
+/**
+ * This class is used to localize the robot using the Ultrasonic Sensor at the beginning of the competition.
+ */
 public class UltrasonicLocalize implements Runnable {
   
-  // Float array used to store readings from the Ultrasonic sensor.
+  /**
+   *  Float array used to store readings from the Ultrasonic sensor.
+   */
   private static float[] usData = new float[ultraSonicSensor.sampleSize()];
   
-  // Integer indicating the angle intervals to scan in during phase one of localization.
+  /**
+   * Integer indicating the angle intervals to scan in during phase one of localization.
+   */
   private static final int phaseOneScanAngle = 15;
   
-  // Integer indicating the angle intervals to scan in during phase two of localization.
+  /**
+   * Integer indicating the angle intervals to scan in during phase two of localization.
+   */
   private static final int phaseTwoScanAngle = 3;
   
   /**
@@ -242,7 +251,7 @@ public class UltrasonicLocalize implements Runnable {
   
   /**
    * Stops the provided thread by interrupting it
-   * @param thread
+   * @param ultrasonicLocalizeSensor    The thread for the ultrasonicSensor thread
    */
   public void stopThread(Thread ultrasonicLocalizeSensor) {
     ultrasonicLocalizeSensor.interrupt();
