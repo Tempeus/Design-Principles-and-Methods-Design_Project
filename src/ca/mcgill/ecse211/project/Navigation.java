@@ -26,6 +26,10 @@ public class Navigation {
    */
   private static double delta_x;
   private static double delta_y;
+  private static double current_x;
+  private static double current_y;
+  private static double target_x;
+  private static double target_y;
   
   /**
    * This method makes the robot go to specified coordinates on the playing field.
@@ -34,46 +38,107 @@ public class Navigation {
    * @param y      The y coordinate of the destination
    */
   public static void travelTo(double x, double y) {
+//    
+//    // orient the robot to face the appropriate angle.
+//    Navigation.orient(x,  y);
+//    
+//    // store initial values for motor tacho count.
+//    int init_leftMotorTachoCount = leftMotor.getTachoCount();
+//    int init_rightMotorTachoCount = rightMotor.getTachoCount();
+//    
+//    leftMotor.setSpeed(FORWARD_SPEED);
+//    rightMotor.setSpeed(FORWARD_SPEED);
+//    leftMotor.forward();
+//    rightMotor.forward();
+//    
+//    // calculate the number of degrees to rotate to reach the desired location.
+//    double x_current = odometer.getXyt()[0] / TILE_SIZE;
+//    double y_current = odometer.getXyt()[1] / TILE_SIZE;
+//    double distance = Math.hypot(x - x_current, y - y_current);
+//    int rotationTacho = Navigation.convertDistance(distance * TILE_SIZE);
+//    
+//    // read the tachoCount rotated by the motor thus far.
+//    int leftTCount = leftMotor.getTachoCount() - init_leftMotorTachoCount;
+//    int rightTCount = rightMotor.getTachoCount() - init_rightMotorTachoCount;
+//    int avgCount = (leftTCount + rightTCount) / 2;
+//    
+//    while (avgCount < rotationTacho) {
+//      //Make sure that robot is moving in a straight line
+//      if(LightLocalizer.checkSensors() == false) {
+//        LightLocalizer.lightAdjustment();
+//      }
+//      
+//      // update avgCount value
+//      leftTCount = leftMotor.getTachoCount() - init_leftMotorTachoCount;
+//      rightTCount = rightMotor.getTachoCount() - init_rightMotorTachoCount;
+//      avgCount = (leftTCount + rightTCount) / 2;
+//      
+//    } 
+//    
+//    // arrived at destination, stop motors.
+//    leftMotor.stop(true);
+//    rightMotor.stop(false);
     
-    // orient the robot to face the appropriate angle.
-    Navigation.orient(x,  y);
+    current_x = odometer.getXyt()[0];
+    current_y = odometer.getXyt()[1];
     
-    // store initial values for motor tacho count.
-    int init_leftMotorTachoCount = leftMotor.getTachoCount();
-    int init_rightMotorTachoCount = rightMotor.getTachoCount();
+    target_x = x;
+    target_y = y;
     
-    leftMotor.setSpeed(FORWARD_SPEED);
-    rightMotor.setSpeed(FORWARD_SPEED);
-    leftMotor.forward();
-    rightMotor.forward();
+    delta_x = target_x - current_x;
+    delta_y = target_y - current_y;
     
-    // calculate the number of degrees to rotate to reach the desired location.
-    double x_current = odometer.getXyt()[0] / TILE_SIZE;
-    double y_current = odometer.getXyt()[1] / TILE_SIZE;
-    double distance = Math.hypot(x - x_current, y - y_current);
-    int rotationTacho = Navigation.convertDistance(distance * TILE_SIZE);
+    // we always start from a specific orientation
+    turnTo(0);
     
-    // read the tachoCount rotated by the motor thus far.
-    int leftTCount = leftMotor.getTachoCount() - init_leftMotorTachoCount;
-    int rightTCount = rightMotor.getTachoCount() - init_rightMotorTachoCount;
-    int avgCount = (leftTCount + rightTCount) / 2;
+    // let's say we want to move along the y-direction first 
+    if(delta_y > 0) {
+      // this means that we should continue going in the same y-direction
+      // do nothing
+    } else {
+      // this means that we should go in the opposite direction
+      turnByClockwise(180);
+    }
     
-    while (avgCount < rotationTacho) {
-      //Make sure that robot is moving in a straight line
+    // now we travel
+    while(delta_y != 0) {
+      moveStraightFor(1);
+      
+      // we check if we are not moving in a straight line
       if(LightLocalizer.checkSensors() == false) {
+        // we correct the path of the robot
         LightLocalizer.lightAdjustment();
       }
-      
-      // update avgCount value
-      leftTCount = leftMotor.getTachoCount() - init_leftMotorTachoCount;
-      rightTCount = rightMotor.getTachoCount() - init_rightMotorTachoCount;
-      avgCount = (leftTCount + rightTCount) / 2;
-      
-    } 
+      // we update the value of delta_y
+      delta_y = target_x - current_x;
+    }
     
-    // arrived at destination, stop motors.
-    leftMotor.stop(true);
-    rightMotor.stop(false);
+    // now we need to travel in the x-direction
+    // we are currently pointing 0 degrees
+    
+    if(delta_x > 0) {
+      // this means that we should turn right
+      turnTo(90);
+    } else {
+      // this means that we should turn left
+      turnTo(-90);
+    }
+    
+    // now we need to go to the target x
+    while(delta_x != 0) {
+      moveStraightFor(1);
+      // we check if we are not moving in a straight line
+      if(LightLocalizer.checkSensors() == false) {
+        // we correct the path of the robot
+        LightLocalizer.lightAdjustment();
+      }
+      // we update the value of delta_x
+      delta_x = target_x - current_x;
+      
+    }
+
+    
+    
   }
   
   /**
