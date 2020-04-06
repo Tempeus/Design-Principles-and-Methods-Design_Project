@@ -16,7 +16,14 @@ import static ca.mcgill.ecse211.project.Resources.FORWARD_SPEED;
 import lejos.hardware.Sound;
 
 /**
- * The class will help the robot to localize on the playing field using light sensors attached to the robot.
+ * The class will help the robot to localize on the playing field using two light sensors attached on both sides of the robot.
+ * 
+ * Additionally, the class also has methods that is responsible in calibrating the robot's orientation, making sure that it is always moving in a straight line.
+ * This calibration occurs when one of the color sensors of the robot detects a line. When this occurs, the robot will make sure that the other color sensor also detects a line.
+ * If it does not detect one, the robot will run the associated motor, rotating it until the color sensor detects the line.
+ * Thus, the robot will be straight.
+ * With this feature, it will allow us to navigate the robot back to the base with the rescue cart without the need of localizing every so often. 
+ * 
  * @author Kevin
  *
  */
