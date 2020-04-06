@@ -2,7 +2,8 @@ package ca.mcgill.ecse211.project;
 
 import static ca.mcgill.ecse211.project.Resources.TILE_SIZE;
 import static ca.mcgill.ecse211.project.Resources.odometer;
-
+import static ca.mcgill.ecse211.project.Resources.backColorSensor;
+import static ca.mcgill.ecse211.project.Resources.leftColorSensor;
 import lejos.hardware.Button;
 
 /**
@@ -10,14 +11,21 @@ import lejos.hardware.Button;
  */
 public class Main {
 
-  public static int buttonChoice;
+  /**
+   * Variable used to get the red value on the back light sensor
+   */
+  private static float[] backRgbArr = new float[1];
   
-  public static int map;
+  /**
+   * red value variables used to assigned the output of the back light sensor
+   */
+  public static float backRedVal;
   
   private static UltrasonicLocalize ultrasoniclocalize = new UltrasonicLocalize();
   private static Thread UltrasonicLocalizeSensor = new Thread(ultrasoniclocalize);
   private static LightLocalizer lightlocalize = new LightLocalizer();
   private static Thread LightLocalizeSensor = new Thread(lightlocalize);
+  private static Rescue rescue = new Rescue();
 
   /**
    * Main method of our Lab Code, runs the solution.
@@ -64,15 +72,28 @@ public class Main {
   }
   
   /**
-   * This method is used to identify if the object is an obstacle or the rescue cart
-   * 
+   * This method is used to identify if the object is an obstacle or the rescue cart.
+   * Since the wall is taller than the objective cart, if the light sensor (that was placed just tall enough to not be able to detect an objective cart) is able to detect an object,
+   * then the object would be a wall, otherwise it would be the objective cart.
    * This method will use the goToObject method in the UltrasonicAvoidance class as well as a light sensor thread for the identification process
+   * @return true   if the object is the objective
+   *         false   if the object is not the objective
    */
-  public static void identifyObstacle() {
-   //Use Ultrasonic sensor to detect the obstacle and making sure it's there
+  public static boolean identifyObstacle() {
+    //Use Ultrasonic sensor to detect the obstacle and making sure it's there
     
     //Use light sensor to detect to see if it is a wall
+    backColorSensor.getRedMode().fetchSample(backRgbArr, 0);
+    backRedVal = backRgbArr[0] * 100;
+    
     //if light sensor detects something, then it is a wall
+    if(Math.abs(backRedVal - LightLocalizer.initialRedValue) > LightLocalizer.rgbThres) {
+      return false;      
+    }
     //Otherwise it is the object cart
+    else{
+      rescue.performRescue();   
+      return true;
+    }
   }
 }

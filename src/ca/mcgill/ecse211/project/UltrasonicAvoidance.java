@@ -23,12 +23,15 @@ public class UltrasonicAvoidance {
    * This method is used after detecting all the objects in the area, the robot will travel to a specific object in order to
    * identify if its the rescue cart or an obstacle
    */
-  public void goToObject() {
+  public static void goToObject() {
     //pop from the queue and go to the object's direction
     
   }
   
-  
+  /**
+   * This method will make the robot navigate around obstacles in in front of the robot.
+   * The robot will 
+   */
   public void avoidObstacle() {
     
   }

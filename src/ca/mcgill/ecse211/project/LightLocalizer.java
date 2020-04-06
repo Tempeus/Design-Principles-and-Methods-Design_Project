@@ -40,7 +40,7 @@ public class LightLocalizer implements Runnable {
   /**
    * Initial red value of board
    */
-  private static double initialRedValue;
+  public static double initialRedValue = 0;
   
   /**
    * Variable used to get the red value on the left light sensor
@@ -55,7 +55,7 @@ public class LightLocalizer implements Runnable {
   /**
    * Threshold to detect lines
    */
-  private static int rgbThres = 11;
+  public static int rgbThres = 11;
   
   /**
    * Mode that describes the state of color sensors
