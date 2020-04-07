@@ -52,6 +52,16 @@ public class Main {
    * the bridge, search zone and starting point accordingly.
    */
   public static void SetCoordinates (){
+    
+    if (WifiSetup.IsTeamRed()) {
+      //Set field parameters for red team. Including the coordinates of the bridge, search zone and starting point etc.
+    }
+    
+    else {
+      //Set field parameters for green team. Including the coordinates of the bridge, search zone and starting point etc.
+    }
+    
+    
   }
   
   /**
