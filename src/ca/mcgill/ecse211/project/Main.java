@@ -30,6 +30,9 @@ public class Main {
     lightlocalize.localize();
 
     new Thread(new Display()).start();
+    
+    // TODO: Set the parameters of the field
+    SetCoordinates();
 
     // TODO: Navigate past the bridge
     Navigation.goPastBridge();
@@ -37,7 +40,18 @@ public class Main {
     // TODO: Navigation and obstacle detection and avoidance
     UltrasonicAvoidance.detectObstacles();
     
+    // TODO: Navigate back to the starting point 
+    Navigation.goStartingpoint();
+    
+    
     System.exit(0);
+  }
+  
+  /**
+   * This method use IsTeamRed in WifiSetup class to determine the team of the robot and set the coordinates of 
+   * the bridge, search zone and starting point accordingly.
+   */
+  public static void SetCoordinates (){
   }
   
   /**
