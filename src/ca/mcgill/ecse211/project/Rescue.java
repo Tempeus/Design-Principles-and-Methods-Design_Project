@@ -65,7 +65,7 @@ public class Rescue {
   }
   
   /**
-   * The motors of the claw will rotate 90 degrees, trapping the rescue cart
+   * Method is used to control the motors of the claw, making them rotate 90 degrees in order to trap the rescue cart.
    */
   private static void activateClaws() {
     leftClawMotor.rotate(claw_angle);
@@ -73,7 +73,7 @@ public class Rescue {
   }
   
   /**
-   * The motors of the claws will lock, preventing the rescue cart from escaping
+   * Method is used to lock the motors of the claws, preventing the rescue cart from escaping.
    */
   @SuppressWarnings("deprecation")
   private static void lockClaws() {

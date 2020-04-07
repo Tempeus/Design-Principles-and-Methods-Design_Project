@@ -133,6 +133,8 @@ public class Resources {
  
  /** 
   * Makes a point given a Wi-Fi parameter prefix.
+  * @param paramPrefix  
+  * @return Point   
   */
  public static Point makePoint(String paramPrefix) {
    return new Point(getWP(paramPrefix + "_x"), getWP(paramPrefix + "_y"));
@@ -140,6 +142,8 @@ public class Resources {
  
  /**
   * Makes a region given a Wi-Fi parameter prefix.
+  * @param paramPrefix  
+  * @return Region  
   */
  public static Region makeRegion(String paramPrefix) {
    return new Region(makePoint(paramPrefix + "_LL"), makePoint(paramPrefix + "_UR"));
