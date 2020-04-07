@@ -38,46 +38,6 @@ public class Navigation {
    * @param y      The y coordinate of the destination
    */
   public static void travelTo(double x, double y) {
-//    
-//    // orient the robot to face the appropriate angle.
-//    Navigation.orient(x,  y);
-//    
-//    // store initial values for motor tacho count.
-//    int init_leftMotorTachoCount = leftMotor.getTachoCount();
-//    int init_rightMotorTachoCount = rightMotor.getTachoCount();
-//    
-//    leftMotor.setSpeed(FORWARD_SPEED);
-//    rightMotor.setSpeed(FORWARD_SPEED);
-//    leftMotor.forward();
-//    rightMotor.forward();
-//    
-//    // calculate the number of degrees to rotate to reach the desired location.
-//    double x_current = odometer.getXyt()[0] / TILE_SIZE;
-//    double y_current = odometer.getXyt()[1] / TILE_SIZE;
-//    double distance = Math.hypot(x - x_current, y - y_current);
-//    int rotationTacho = Navigation.convertDistance(distance * TILE_SIZE);
-//    
-//    // read the tachoCount rotated by the motor thus far.
-//    int leftTCount = leftMotor.getTachoCount() - init_leftMotorTachoCount;
-//    int rightTCount = rightMotor.getTachoCount() - init_rightMotorTachoCount;
-//    int avgCount = (leftTCount + rightTCount) / 2;
-//    
-//    while (avgCount < rotationTacho) {
-//      //Make sure that robot is moving in a straight line
-//      if(LightLocalizer.checkSensors() == false) {
-//        LightLocalizer.lightAdjustment();
-//      }
-//      
-//      // update avgCount value
-//      leftTCount = leftMotor.getTachoCount() - init_leftMotorTachoCount;
-//      rightTCount = rightMotor.getTachoCount() - init_rightMotorTachoCount;
-//      avgCount = (leftTCount + rightTCount) / 2;
-//      
-//    } 
-//    
-//    // arrived at destination, stop motors.
-//    leftMotor.stop(true);
-//    rightMotor.stop(false);
     
     current_x = odometer.getXyt()[0];
     current_y = odometer.getXyt()[1];
@@ -134,10 +94,7 @@ public class Navigation {
       }
       // we update the value of delta_x
       delta_x = target_x - current_x;
-      
     }
-
-    
     
   }
   

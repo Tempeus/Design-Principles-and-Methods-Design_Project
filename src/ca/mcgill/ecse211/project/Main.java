@@ -38,11 +38,7 @@ public class Main {
     Navigation.goPastBridge();
     
     // TODO: Navigation and obstacle detection and avoidance
-    UltrasonicAvoidance.detectObstacles();
-    
-    // TODO: Navigate back to the starting point 
-    Navigation.goStartingpoint();
-    
+    UltrasonicAvoidance.detectObstacles(); 
     
     System.exit(0);
   }
@@ -59,9 +55,7 @@ public class Main {
     
     else {
       //Set field parameters for green team. Including the coordinates of the bridge, search zone and starting point etc.
-    }
-    
-    
+    }    
   }
   
   /**

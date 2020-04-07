@@ -8,9 +8,12 @@ package ca.mcgill.ecse211.project;
 public class WifiSetup {
 
   /**
-   * This method is used to get inputs
+   * This method is used to check if the robot is on the red team
+   * 
+   * @return true   if the robot is indeed on the red team
+   *         false  if the robot is on the green team
    */
-  public void getInput() {
-    
+  public static boolean IsTeamRed() {
+    return true;
   }
 }
