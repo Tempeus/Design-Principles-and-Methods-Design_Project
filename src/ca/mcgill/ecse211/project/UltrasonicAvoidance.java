@@ -4,7 +4,16 @@ import static ca.mcgill.ecse211.project.Resources.backColorSensor;
 import static ca.mcgill.ecse211.project.Resources.ultraSonicSensor;
 
 /**
- * This class is used to avoid obstacles on the playing field using the Ultrasonic sensor
+ * This class is used to detect objects around the robot, travel to the object, identify if the object is the cart of a wall and avoid obstacles.
+ * When the robot reaches the playing field, it will detect objects around itself in a 360 degrees radius using the ultrasonic sensor.
+ * When the robot detects an object, it will put the information (distance, theta) into an array.
+ * Afterwards, the robot will go through the list and find the object that it is closest to.
+ * It will then travel to that object and identify if the object is the cart of the wall.
+ * The hardware team has installed a color sensor that is taller than the objective cart.
+ * Therefore, if the color sensor detects something, that means the object is a wall, otherwise it would be the cart.
+ * 
+ * Once the robot has successfully identified the cart, it would initiate the rescue sequence. 
+ * Otherwise, the robot will avoid the obstacle by navigating around it.
  * @author Kevin
  *
  */
