@@ -4,6 +4,20 @@ import static ca.mcgill.ecse211.project.Resources.odometer;
 
 /**
  * The main driver class for the project.
+ * This class is essentially the brain of the robot as well as managing all the peripheral threads.
+ * 
+ * This class will first run the odometer thread as well as the display thread and localize the robot.
+ * Afterwards, it will set all the initial variables, such as the location of the tunnels by using {@code SetCoordinates}.
+ * The robot will then proceed towards the tunnel and cross it by using {@code goPastBridge()}.
+ * After successfully going pass the tunnel, it will initiate its searching and navigation phase.
+ * 
+ * In this phase, the robot will detect all surrounding objects around the robot using {@code UltrasonicAvoidance.detectObstacles()} and will navigate towards the nearest object.
+ * After reaching the object, it will analyze if the object is a wall or the objective cart.
+ * Once the robot detects the objective cart, it will be in the rescue phase.
+ * 
+ * In this phase, the robot will rotate itself 180 degrees and capture the cart with its claws.
+ * Afterwards, the robot will lock its claws, preventing the cart from escaping. 
+ * The robot will then navigate itself back to base while avoiding all obstacles.
  */
 public class Main {
  
@@ -19,8 +33,6 @@ public class Main {
    */
   public static void main(String[] args) {
     new Thread(odometer).start();
-        
-    // TODO: set initial conditions (where the bridge is located and etc)
     
     // robot localizes itself and moves to origin 
     UltrasonicLocalizeSensor.start();

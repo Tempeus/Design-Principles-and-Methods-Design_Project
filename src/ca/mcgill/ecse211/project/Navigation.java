@@ -15,6 +15,11 @@ import lejos.hardware.Sound;
 /**
  * This class is used to make the robot to precisely travel to specified coordinates on the playing field.
  * In order to accurately do so, it uses the odometer.
+ * 
+ * One of the main aspect of the navigation mechanism is that the robot will only be traveling along the x and y axis. 
+ * This feature was implemented to reduce the number of localizations needed on the playing field.
+ * In order to keep the robot moving in a straight line, we will be using the lightLocalization class that will use the two light sensors to track the perpendicular lines while the robot is travelling.
+ * If it was determined that the robot isn't moving in a straight line, the robot will readjust itself. 
  * @author Kevin
  *
  */
@@ -214,9 +219,16 @@ public class Navigation {
   }
   
   /**
-   * This navigation method is used to help the robot go past the bridge before initiating the search for the rescue cart
+   * This navigation method is used to help the robot go past the bridge before initiating the search for the rescue cart.
+   * It is also responsible when the robot rescued the cart and is going back to the base.
    */
   public static void goPastBridge() {
+    if(UltrasonicAvoidance.cartFound == false) {
+      //Coordinates for exiting the tunnel
+    }
     
+    else {
+      //coordinates for entering the tunnel
+    }
   }
 }

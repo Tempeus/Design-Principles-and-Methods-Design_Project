@@ -33,7 +33,8 @@ public class UltrasonicAvoidance {
   public static float backRedVal;
   
   /**
-   * Boolean that is used to indicate if the objective cart was found and captured
+   * Boolean that is used to indicate if the objective cart was found and captured.
+   * It will also be used to help determine if the robot is returning to the base or exiting from the base through the tunnel.
    */
   public static boolean cartFound = false;
   
@@ -122,7 +123,6 @@ public class UltrasonicAvoidance {
   
   /**
    * This method will make the robot navigate around obstacles in in front of the robot when it is confirmed not to be the objective cart.
-   * The robot will turn 
    */
   public static void avoidObstacle() {
     //Use navigation method to avoid obstacle

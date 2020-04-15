@@ -8,7 +8,13 @@ import static ca.mcgill.ecse211.project.Resources.leftMotor;
 import static ca.mcgill.ecse211.project.Resources.rightMotor;
 
 /**
- * This class is used to initiate Rescue procedures when the rescue vehicle is successfully identified
+ * This class is used to initiate Rescue procedures when the rescue vehicle is successfully identified.
+ * The rescue mechanism mainly depends on the claws installed on the back of the robot.
+ * Once the cart has been successfully identified, the robot will rotate by 180 degrees in order for the claws to face the cart.
+ * Afterwards, the motors for the claws will turn on and the claw will capture the objective cart.
+ * Once capture, the motors will lock themselves in order to prevent the cart from escaping. 
+ * 
+ * The hardware team has designed the claws large enough to capture the entire objective cart without locating the hook.
  * @author Kevin
  *
  */
